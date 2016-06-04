@@ -10,6 +10,9 @@ admin=$3
 is_public=$4
 registration=$5
 
+# force registration value
+[ "$registration" = "" ] && registration=0
+
 # Load common variables
 . ./_common.sh
 
@@ -78,6 +81,9 @@ exec_cmd "cd \"${DESTDIR}\" \
  && cd extlib/ynhauth \
  && ${DESTDIR}/bin/python ./setup.py develop" &>$SETUPLOG \
   || ynh_die "Unable to set up MediaGoblin. Please see log at ${SETUPLOG}"
+
+# force postgresql starting
+sudo service postgresql start
 
 # Configure the database
 exec_cmd "cd && createuser -D -R -S ${dbuser}" postgres
